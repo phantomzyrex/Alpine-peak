@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Alpine Peak</title>
+  <meta name="description" content="Procedural 2:1 isometric pixel-art ski resort and alpine town tycoon with 174+ craftable varieties across 5 elevations, Winter Festival &amp; Ferris Wheel, Night Mode 2.0, Mountain Coaster, 10 lift types, waterfalls, and 247+ bustling skiers, balloons &amp; paragliders.">
+  <meta name="keywords" content="game, canvas-2d, web-audio, simulation">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><polygon points='32,4 60,32 32,60 4,32' fill='%23291b12' stroke='%23e6b968' stroke-width='3'/><polygon points='14,40 29,18 42,36 48,28 54,40' fill='%23466585'/><polygon points='29,18 35,27 29,29 24,26' fill='%23f7f3ea'/><polygon points='48,28 52,35 47,36 45,33' fill='%23f7f3ea'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=JetBrains+Mono:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="./assets/atlas_tiles.png">
+  <link rel="preload" as="image" href="./assets/atlas_tiles_2.png">
+  <link rel="preload" as="image" href="./assets/atlas_entities.png">
+  <link rel="preload" as="image" href="./assets/hud_thumbnails.png">
+  <link rel="stylesheet" href="./css/sanctuary.css">
+</head>
+<body>
+  <!-- Full-Viewport Pixel Ski Mountain & Alpine Town Stage -->
+  <canvas id="sanctuary-canvas" aria-label="Alpine Peak Isometric Ski Resort &amp; Town"></canvas>
+
+  <!-- Subtle Snapshot Flash Overlay -->
+  <div id="shutter-flash" class="shutter-flash" aria-hidden="true"></div>
+
+  <!-- HUD Style 2 · Carved Tyrolean Chalet Timber, Pine & Wrought Iron -->
+  <div id="hud-root" class="hud-root hud-style2">
+
+    <!-- ===================================================================
+         MOBILE-ONLY TOP BAR (<= 768px): Slim Vital Signs Pill + [☰] Menu
+         100% hidden on Desktop (> 768px) — Zero Desktop Layout Impact
+         =================================================================== -->
+    <header id="mobile-top-bar" class="mobile-top-bar mobile-only" aria-label="Mobile Resort Header">
+      <button id="mobile-vital-pill" type="button" class="mobile-vital-pill" title="Open Resort Guide — Economy, Warmth, Thrill &amp; 12 Milestones">
+        <span id="mob-stat-cash" class="stat-mono cash-text">$4,500</span>
+        <span class="mob-pill-sep" aria-hidden="true">&middot;</span>
+        <span class="mob-crowd-wrap">
+          <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" class="mob-crowd-icon">
+            <circle cx="6" cy="5.2" r="2.3" fill="currentColor"/>
+            <path d="M2.2 13c0-2.1 1.7-3.6 3.8-3.6s3.8 1.5 3.8 3.6" fill="currentColor"/>
+            <circle cx="11.3" cy="5.8" r="1.8" fill="currentColor" opacity="0.78"/>
+            <path d="M9.6 13c.2-1.5 1.3-2.7 2.8-2.7 1.3 0 2.4.9 2.7 2.7" fill="currentColor" opacity="0.78"/>
+          </svg>
+          <span id="mob-stat-crowd" class="stat-mono mob-crowd-text">164</span>
+        </span>
+        <span class="mob-pill-sep" aria-hidden="true">&middot;</span>
+        <span class="mob-rating-wrap">
+          <span class="star-glyph" aria-hidden="true">&#9733;</span>
+          <span id="mob-stat-rating" class="stat-mono rating-text">4.4</span>
+        </span>
+        <span class="mob-runs-cluster" aria-hidden="true">
+          <span class="run-sign sign-green"></span><span id="mob-runs-green" class="stat-mono mob-run-num">2</span>
+          <span class="run-sign sign-blue"></span><span id="mob-runs-blue" class="stat-mono mob-run-num">4</span>
+          <span class="run-sign sign-black"></span><span id="mob-runs-black" class="stat-mono mob-run-num">2</span>
+        </span>
+        <span id="mob-guide-dot" class="notify-dot mob-notify-dot hidden" aria-hidden="true"></span>
+      </button>
+
+      <button id="btn-mobile-menu" type="button" class="mobile-menu-btn" aria-label="Open Resort Controls &amp; Atmosphere Menu" aria-expanded="false">
+        <svg viewBox="0 0 18 18" width="16" height="16" aria-hidden="true">
+          <path d="M2.5 4.5h13M2.5 9h13M2.5 13.5h13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- ===================================================================
+         MOBILE-ONLY FLOATING RIGHT UTILITY RAIL (<= 768px)
+         Inspect/Cancel, Rotate (contextual), Bulldoze & Undo
+         =================================================================== -->
+    <aside id="mobile-tool-rail" class="mobile-tool-rail mobile-only" aria-label="Quick Construction Tools">
+      <button id="mob-btn-inspect" type="button" class="medallion-tool-btn tool-inspect mob-rail-medallion hidden" title="Exit Build Tool &amp; Return to Pan / Inspect" aria-label="Done Building">
+        <span class="tool-badge">Done</span>
+      </button>
+      <button id="mob-btn-rotate" type="button" class="medallion-tool-btn tool-rotate mob-rail-medallion hidden" title="Rotate Selected Item" aria-label="Rotate Item">
+        <span id="mob-rotate-badge" class="tool-badge">SW</span>
+      </button>
+      <button id="mob-btn-bulldoze" type="button" class="medallion-tool-btn tool-bulldoze mob-rail-medallion" title="Bulldoze Structure, Lift or Tree" aria-label="Bulldoze">
+        <span class="tool-badge">Clear</span>
+      </button>
+      <button id="mob-btn-undo" type="button" class="mob-undo-stud" title="Undo Last Action" aria-label="Undo">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+          <path d="M6 4L2.5 7.5 6 11M3 7.5h6.5a3.5 3.5 0 0 1 0 7H8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </button>
+    </aside>
+
+    <!-- ===================================================================
+         MOBILE-ONLY [☰] RESORT CONTROLS & ATMOSPHERE BOTTOM DRAWER
+         =================================================================== -->
+    <div id="mobile-sheet-backdrop" class="mobile-sheet-backdrop mobile-only hidden" aria-hidden="true"></div>
+    <section id="mobile-menu-sheet" class="mobile-menu-sheet mobile-only" aria-label="Resort Controls &amp; Atmosphere" aria-hidden="true">
+      <div class="mobile-sheet-handle" aria-hidden="true"></div>
+      <div class="mobile-sheet-header">
+        <span class="mobile-sheet-title">Alpine Peak Studio</span>
+        <button id="btn-mobile-menu-close" type="button" class="insp-close-stud mobile-sheet-close" aria-label="Close Menu">&times;</button>
+      </div>
+
+      <div class="mobile-sheet-body">
+        <!-- 1. Winter Lighting Atmosphere (Tucked inside Menu per Mobile Spec) -->
+        <div class="mob-menu-group">
+          <span class="mob-group-label">Winter Lighting Atmosphere</span>
+          <div id="mob-atmo-seg" class="mob-seg-row" role="group" aria-label="Winter Lighting Atmosphere">
+            <button type="button" class="mob-seg-btn active" data-atmo="day">&#9728;&#65039; Bluebird</button>
+            <button type="button" class="mob-seg-btn" data-atmo="alpenglow">&#127749; Alpenglow</button>
+            <button type="button" class="mob-seg-btn" data-atmo="night">&#127769; Night Ski</button>
+          </div>
+        </div>
+
+        <!-- 2. Mountain Valley Preset & New Seed -->
+        <div class="mob-menu-group">
+          <span class="mob-group-label">Mountain Valley &amp; Seed</span>
+          <div class="mob-preset-row">
+            <select id="mob-preset-select" class="studio-select mob-preset-select" aria-label="Mountain Valley Preset">
+              <option value="zermatt_grand">Zermatt Grand Valley</option>
+              <option value="twin_summits">Twin Summit Bowl</option>
+              <option value="night_park">Floodlit Freestyle Park</option>
+              <option value="random_mountain">Procedural Mountain</option>
+              <option value="fresh_powder">Fresh Powder Blank</option>
+            </select>
+            <button id="mob-btn-new" type="button" class="timber-mini-btn mob-new-btn">New Seed</button>
+          </div>
+        </div>
+
+        <!-- 3. Simulation Speed & Economy Mode -->
+        <div class="mob-menu-group">
+          <span class="mob-group-label">Simulation Speed &amp; Economy</span>
+          <div class="mob-speed-mode-row">
+            <div id="mob-speed-seg" class="mob-seg-row mob-speed-seg" role="group" aria-label="Simulation Speed">
+              <button type="button" class="mob-seg-btn" data-speed="0">&#9208;</button>
+              <button type="button" class="mob-seg-btn active" data-speed="1">1&times;</button>
+              <button type="button" class="mob-seg-btn" data-speed="2">2&times;</button>
+            </div>
+            <button id="mob-btn-mode" type="button" class="mob-action-tile mob-mode-tile">
+              <span id="mob-mode-label">Tycoon Mode</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Quick Resort Showcases & Utilities -->
+        <div class="mob-menu-group">
+          <span class="mob-group-label">Showcases &amp; Utilities</span>
+          <div class="mob-actions-grid">
+            <button id="mob-btn-finale" type="button" class="mob-action-tile">&#127878; Finale</button>
+            <button id="mob-btn-tour" type="button" class="mob-action-tile">&#127909; Camera Tour</button>
+            <button id="mob-btn-guide" type="button" class="mob-action-tile">&#128214; Resort Guide</button>
+            <button id="mob-btn-sound" type="button" class="mob-action-tile"><span id="mob-sound-label">&#128266; Sound On</span></button>
+            <button id="mob-btn-snapshot" type="button" class="mob-action-tile">&#128248; 1:1 Snapshot</button>
+            <button id="mob-btn-zen" type="button" class="mob-action-tile">&#128065;&#65039; Zen View</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TOP-LEFT: Carved Spruce & Wrought-Iron Vital Signs + Studio Strip
+         =================================================================== -->
+    <div id="hud-top-left-cluster" class="hud-top-left-cluster">
+      <header id="hud-top-left" class="tyrolean-status-ledger" aria-label="Resort Vital Signs">
+        <!-- Well 1: Resort Treasury ($ Swiss Francs) -->
+        <div id="stat-cash-pill" class="ledger-well well-cash" title="Resort Treasury — Earned from lift passes, ski school, rentals, mountain dining, boutiques &amp; train/heli arrivals">
+          <span id="stat-cash" class="stat-mono cash-text">$4,500</span>
+        </div>
+
+        <!-- Well 2: Live 160+ Bustling Crowd Split (Mountain vs. Village/Rink) -->
+        <div id="stat-visitors-split" class="ledger-well well-crowd" title="Bustling Resort Crowd — Active Skiers &amp; Lift Riders on Mountain vs. Shoppers, Diners, Pond Hockey &amp; Skaters in Village">
+          <span id="stat-skiers" class="stat-mono crowd-mtn">88</span>
+          <span class="crowd-sep" aria-hidden="true">&middot;</span>
+          <span id="stat-town" class="stat-mono crowd-vil">76</span>
+        </div>
+
+        <!-- Well 3: Resort Star Rating -->
+        <div id="stat-rating-pill" class="ledger-well well-rating" title="Resort Reputation Rating (1.0 – 5.0 Stars)">
+          <span class="star-glyph" aria-hidden="true">&#9733;</span>
+          <span id="stat-rating" class="stat-mono rating-text">4.4</span>
+        </div>
+
+        <!-- Well 4: Active Ski Runs Badge (Green Circle / Blue Square / Black Diamond) -->
+        <div id="stat-runs-pill" class="ledger-well well-runs" title="Rated Downhill Ski Runs — Green Circle (Beginner), Blue Square (Cruiser), Black Diamond (Expert)">
+          <span class="run-pair" title="Green Circle Beginner Runs">
+            <span class="run-sign sign-green" aria-hidden="true"></span>
+            <span id="runs-green" class="stat-mono">2</span>
+          </span>
+          <span class="run-pair" title="Blue Square Intermediate Runs">
+            <span class="run-sign sign-blue" aria-hidden="true"></span>
+            <span id="runs-blue" class="stat-mono">4</span>
+          </span>
+          <span class="run-pair" title="Black &amp; Double-Black Expert Chutes">
+            <span class="run-sign sign-black" aria-hidden="true"></span>
+            <span id="runs-black" class="stat-mono">2</span>
+          </span>
+        </div>
+
+        <!-- Live Dynamic Gauge 1: Resort Village Warmth (Amber Tube) -->
+        <div class="ledger-tube tube-warmth" title="Average Guest Warmth &amp; Cozy Lodge Comfort">
+          <div id="hud-warmth-fill" class="ledger-tube-fill fill-warmth" style="--fill-scale: 0.86"></div>
+          <div class="ledger-tube-gloss" aria-hidden="true"></div>
+          <span id="hud-warmth-label" class="ledger-tube-caption">Warmth 86%</span>
+        </div>
+
+        <!-- Live Dynamic Gauge 2: Slope & Park Thrill (Ice-Cyan Tube) -->
+        <div class="ledger-tube tube-thrill" title="Average Downhill Piste &amp; Terrain Park Thrill">
+          <div id="hud-thrill-fill" class="ledger-tube-fill fill-thrill" style="--fill-scale: 0.88"></div>
+          <div class="ledger-tube-gloss" aria-hidden="true"></div>
+          <span id="hud-thrill-label" class="ledger-tube-caption">Thrill 88%</span>
+        </div>
+      </header>
+
+      <!-- Slim Carved Timber Studio Bar (Preset, Seed, Undo/Redo, Sound, Zen) -->
+      <div id="hud-studio-strip" class="tyrolean-studio-strip" aria-label="Mountain Seed &amp; Camera Utilities">
+        <select id="preset-select" class="studio-select" aria-label="Mountain Valley Preset" title="Choose 28x28 Ski Mountain &amp; Town Preset">
+          <option value="zermatt_grand">Zermatt Grand Valley</option>
+          <option value="twin_summits">Twin Summit Bowl</option>
+          <option value="night_park">Floodlit Freestyle Park</option>
+          <option value="random_mountain">Procedural Mountain</option>
+          <option value="fresh_powder">Fresh Powder Blank</option>
+        </select>
+
+        <button id="btn-new-island" type="button" class="timber-mini-btn" title="Generate New Mountain Seed">
+          <span>New</span>
+        </button>
+
+        <span class="timber-sep" aria-hidden="true"></span>
+
+        <button id="btn-undo" type="button" class="timber-icon-btn" title="Undo [Ctrl/Cmd+Z]" aria-label="Undo">
+          <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true">
+            <path d="M6 4L2.5 7.5 6 11M3 7.5h6.5a3.5 3.5 0 0 1 0 7H8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </button>
+        <button id="btn-redo" type="button" class="timber-icon-btn" title="Redo [Ctrl/Cmd+Y]" aria-label="Redo">
+          <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true">
+            <path d="M10 4l3.5 3.5L10 11M13 7.5H6.5a3.5 3.5 0 0 0 0 7H8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </button>
+
+        <button id="btn-zoom-reset" type="button" class="timber-mini-btn zoom-readout" title="Reset Zoom &amp; Center Mountain [0]">100%</button>
+
+        <span class="timber-sep" aria-hidden="true"></span>
+
+        <button id="btn-festive-finale" type="button" class="timber-mini-btn timber-festive-btn" title="Launch Grand Winter Festival Finale — Fireworks, Torchlight Ski Parade &amp; Hot-Air Balloons [F]"><span>Finale</span><span class="mini-kbd">F</span></button>
+        <button id="btn-showcase-cam" type="button" class="timber-mini-btn timber-showcase-btn" aria-pressed="false" title="Toggle Smooth 60fps Showcase Camera Tour [C]"><span>Tour</span><span class="mini-kbd">C</span></button>
+
+        <span class="timber-sep" aria-hidden="true"></span>
+
+        <button id="btn-sound" type="button" class="timber-icon-btn" title="Toggle Winter Soundscape [M]" aria-label="Toggle Sound">
+          <svg id="icon-sound-on" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true">
+            <path d="M3 6.2h2.4L8.8 3.5v9L5.4 9.8H3V6.2z" fill="currentColor"/>
+            <path d="M11 5.4a3.6 3.6 0 0 1 0 5.2M12.8 3.6a6.2 6.2 0 0 1 0 8.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+          </svg>
+          <svg id="icon-sound-off" class="hidden" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true">
+            <path d="M3 6.2h2.4L8.8 3.5v9L5.4 9.8H3V6.2z" fill="currentColor"/>
+            <path d="M11 6l3.5 4M14.5 6L11 10" stroke="#f87171" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <button id="btn-zen" type="button" class="timber-icon-btn" title="Zen Panorama Mode — Hide HUD [H]" aria-label="Hide HUD">
+          <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true">
+            <path d="M1.5 8s2.4-4.2 6.5-4.2S14.5 8 14.5 8s-2.4 4.2-6.5 4.2S1.5 8 1.5 8z" stroke="currentColor" stroke-width="1.4" fill="none"/>
+            <circle cx="8" cy="8" r="2" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         TOP-RIGHT: 3-Sector Atmosphere Wheel + 3 Carved Timber Action Pills
+         =================================================================== -->
+    <aside id="hud-top-right" class="hud-top-right-stack" aria-label="Winter Atmosphere &amp; Resort Actions">
+      <!-- 3-Sector Carved Timber Wheel (`atmo_dial.png`) -->
+      <div class="atmo-wheel-wrap">
+        <div id="atmo-group" class="atmo-wheel" data-active-atmo="day" role="group" aria-label="Winter Lighting Atmosphere">
+          <button type="button" class="seg-btn atmo-wedge wedge-day active" data-atmo="day" title="Bluebird Day — Crisp Alpine Sunshine, Floating Pixel Clouds &amp; Snow Crystals" aria-label="Bluebird Day"></button>
+          <button type="button" class="seg-btn atmo-wedge wedge-alpenglow" data-atmo="alpenglow" title="Alpenglow — Rose-Gold Summit Sunbeams &amp; Violet Valley Shadows" aria-label="Alpenglow"></button>
+          <button type="button" class="seg-btn atmo-wedge wedge-night" data-atmo="night" title="Night Ski — Floodlit Slopes, Neon Park Lights, Glowing Chalet Windows &amp; Gondolas" aria-label="Night Ski"></button>
+          <div id="atmo-wheel-needle" class="atmo-wheel-needle" aria-hidden="true"></div>
+        </div>
+        <div id="atmo-active-label" class="atmo-wheel-plaque">Bluebird Day</div>
+      </div>
+
+      <!-- 3 Stacked Carved Action Pills (`pill_guide.png`, `pill_mode.png`, `pill_snapshot.png`) -->
+      <div class="carved-action-pills">
+        <button id="btn-guide-toggle" type="button" class="carved-pill pill-guide" title="Open Resort Guide — Milestones, Lift &amp; Piste Status, Economy [G]">
+          <span class="carved-pill-text">Resort Guide</span>
+          <span class="carved-pill-kbd">G</span>
+          <span id="guide-badge-dot" class="notify-dot hidden" aria-hidden="true"></span>
+        </button>
+
+        <button id="btn-mode-toggle" type="button" class="carved-pill pill-mode" title="Switch between Resort Tycoon Economy and Unlimited Free-Build Sandbox">
+          <span id="mode-label" class="carved-pill-text">Tycoon Mode</span>
+        </button>
+
+        <button id="btn-snapshot" type="button" class="carved-pill pill-snapshot" title="Export 1:1 Crisp Full-Mountain PNG">
+          <span class="carved-pill-text">1:1 PNG Snapshot</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===================================================================
+         TOP-CENTER: Carved Mountain-Seal & Parchment Banner (Lift Drag + Toasts)
+         =================================================================== -->
+    <div id="lift-drag-banner" class="lift-drag-banner hidden" role="status" aria-live="polite"></div>
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- ===================================================================
+         BOTTOM-LEFT: Isometric 2:1 Diamond Timber & Brass-Compass Minimap
+         =================================================================== -->
+    <aside id="hud-minimap" class="tyrolean-minimap" aria-label="Live Isometric Resort Minimap">
+      <div class="minimap-bezel-bg" aria-hidden="true"></div>
+      <canvas id="minimap-canvas" class="minimap-canvas" width="220" height="124" title="Click or drag anywhere on the mountain to move camera"></canvas>
+      <div class="minimap-compass-cap" aria-hidden="true"></div>
+
+      <!-- Carved Wooden Bezel Stud Controls (Zoom Out / In & Sim Speed) -->
+      <button id="btn-zoom-out" type="button" class="minimap-stud stud-zoom-out" title="Zoom Out [-]" aria-label="Zoom Out">&minus;</button>
+      <button id="btn-zoom-in" type="button" class="minimap-stud stud-zoom-in" title="Zoom In [+]" aria-label="Zoom In">+</button>
+
+      <div id="speed-group" class="minimap-speed-studs" role="group" aria-label="Simulation Speed">
+        <button type="button" class="seg-btn minimap-stud stud-speed-0" data-speed="0" title="Pause Simulation [P]">&par;</button>
+        <button type="button" class="seg-btn minimap-stud stud-speed-1 active" data-speed="1" title="Normal Speed (1x)">1&times;</button>
+        <button type="button" class="seg-btn minimap-stud stud-speed-2" data-speed="2" title="Fast Speed (2x)">2&times;</button>
+      </div>
+    </aside>
+
+    <!-- ===================================================================
+         BOTTOM-RIGHT: Carved Timber, Rope & Parchment Live Inspector Card
+         =================================================================== -->
+    <aside id="inspector-card" class="inspector-card hidden" aria-label="Live Guest &amp; Tile Inspector">
+      <button id="btn-insp-close" type="button" class="insp-close-stud" title="Close Inspector [Esc]" aria-label="Close Inspector">&times;</button>
+
+      <!-- Left Rope-Trimmed Portrait Recess -->
+      <div class="insp-portrait-well">
+        <img id="insp-portrait" class="insp-portrait pixelated" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="">
+        <span id="insp-meta" class="insp-meta">Spent $70</span>
+      </div>
+
+      <!-- Follow / Center Action Pill Beneath Portrait -->
+      <button id="btn-insp-follow" type="button" class="insp-follow-btn" title="Lock Camera onto Selected Skier, Lift Cabin, Helicopter or Train">
+        <span id="insp-follow-label">Follow</span>
+      </button>
+
+      <!-- Upper-Right Dual Brass-Capped Glass Meter Tubes -->
+      <div id="insp-meters" class="insp-meters">
+        <div class="insp-tube insp-tube-warmth" title="Guest Warmth">
+          <div id="insp-warmth-fill" class="insp-meter-fill fill-warmth" style="--fill-scale: 0.84"></div>
+          <span id="insp-warmth-val" class="insp-meter-val">Warmth 84%</span>
+        </div>
+        <div class="insp-tube insp-tube-thrill" title="Slope Thrill">
+          <div id="insp-thrill-fill" class="insp-meter-fill fill-thrill" style="--fill-scale: 0.92"></div>
+          <span id="insp-thrill-val" class="insp-meter-val">Thrill 92%</span>
+        </div>
+      </div>
+
+      <!-- Fallback Role Header when Inspecting Static Lift / Tile -->
+      <div id="insp-static-header" class="insp-static-header hidden">
+        <span class="insp-static-tag">Alpine Peak Inspection</span>
+      </div>
+
+      <!-- Lower-Right Torn-Edge Parchment Note Card -->
+      <div class="insp-parchment-box">
+        <div class="insp-title-row">
+          <span id="insp-name" class="insp-name">Lukas Meier</span>
+          <span id="insp-badge" class="insp-badge">Alpine Carver</span>
+        </div>
+        <div id="insp-action" class="insp-action">Carving Blue Run &mdash; Thrilled!</div>
+        <div id="insp-thought" class="insp-thought">&ldquo;Fresh corduroy all the way from the summit!&rdquo;</div>
+      </div>
+    </aside>
+
+    <!-- ===================================================================
+         SLIDE-OVER: Carved Spruce & Parchment Alpine Resort Guide Drawer
+         =================================================================== -->
+    <section id="guide-drawer" class="guide-drawer" aria-label="Resort Guide, Lift Status &amp; Milestones" aria-hidden="true">
+      <div class="guide-header">
+        <div>
+          <h2 class="guide-title">Alpine Peak Resort Guide</h2>
+          <p id="guide-subtitle" class="guide-subtitle">0 of 12 Resort Milestones Completed &middot; &#9733; 4.4 Rating</p>
+        </div>
+        <button id="btn-guide-close" type="button" class="insp-close-stud guide-close" title="Close Resort Guide [G / Esc]" aria-label="Close">
+          &times;
+        </button>
+      </div>
+
+      <div class="guide-body">
+        <!-- 1. Resort Economy & Guest Comfort Breakdown -->
+        <div class="guide-section">
+          <div class="guide-section-head">
+            <span class="section-eyebrow">Resort Economy &amp; Comfort</span>
+            <span id="econ-train-eta" class="section-meta">Swiss Train: Active</span>
+          </div>
+          <div class="econ-grid">
+            <div class="econ-stat-box">
+              <span class="econ-label">Treasury</span>
+              <span id="econ-cash" class="econ-val val-cash">$4,500</span>
+            </div>
+            <div class="econ-stat-box">
+              <span class="econ-label">Avg Warmth</span>
+              <span id="econ-warmth" class="econ-val val-warm">86%</span>
+            </div>
+            <div class="econ-stat-box">
+              <span class="econ-label">Slope Thrill</span>
+              <span id="econ-thrill" class="econ-val val-thrill">88%</span>
+            </div>
+            <div class="econ-stat-box">
+              <span class="econ-label">Corduroy Piste</span>
+              <span id="econ-grooming" class="econ-val">95%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Active Ski Lifts & Piste Network Status -->
+        <div class="guide-section">
+          <div class="guide-section-head">
+            <span class="section-eyebrow">Lift &amp; Piste Status</span>
+            <span id="lifts-count-meta" class="section-meta">6 Lifts &middot; 8 Runs</span>
+          </div>
+          <div id="lifts-status-list" class="lifts-status-list"></div>
+        </div>
+
+        <!-- 3. 12 Resort Milestones / Challenges -->
+        <div class="guide-section">
+          <div class="guide-section-head">
+            <span id="milestones-eyebrow" class="section-eyebrow">Resort Milestones (12)</span>
+            <span id="milestones-meta" class="section-meta">Earn +$ Cash Grants</span>
+          </div>
+          <div id="challenges-list" class="challenges-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         BOTTOM-CENTER: Pitched Chalet-Roof 174-Item Construction Cabinet
+         =================================================================== -->
+    <nav id="hud-bottom-dock" class="build-dock rows-2" aria-label="Alpine Construction Dock">
+      <!-- Floating Hover / Active Item Parchment Tooltip -->
+      <div id="palette-tooltip" class="palette-tooltip hidden" role="tooltip">
+        <div class="tooltip-top">
+          <span id="tooltip-title" class="tooltip-title">Quad Chairlift</span>
+          <span id="tooltip-cost" class="tooltip-cost">$320</span>
+        </div>
+        <div id="tooltip-desc" class="tooltip-desc">Click Base station and drag uphill/downhill along N-S or E-W to string steel towers &amp; chairs.</div>
+      </div>
+
+      <!-- Top Medallion Ridge: 5 Rope-Linked Category Medallions + 4 Tree-Ring Tool Medallions -->
+      <div class="dock-medallion-ridge">
+        <div id="dock-tabs" class="dock-tabs-rope" role="tablist" aria-label="Construction Categories">
+          <button type="button" class="dock-tab" role="tab" data-tab="sculpt" title="Sculpt Brushes, Matterhorn Horn, Glacial Bowl, 17 Surfaces &amp; Waterfalls (32 items) [1]">
+            <span class="tab-medallion-ring" aria-hidden="true"></span>
+            <span class="tab-label">Sculpt</span>
+            <span class="tab-count">32</span>
+          </button>
+          <button type="button" class="dock-tab active" role="tab" data-tab="lifts" title="10 Uphill Lift Systems, Swiss Rail, Fleet &amp; Bridges (30 items) [2]">
+            <span class="tab-medallion-ring" aria-hidden="true"></span>
+            <span class="tab-label">Lifts</span>
+            <span class="tab-count">30</span>
+          </button>
+          <button type="button" class="dock-tab" role="tab" data-tab="runs" title="Mountain Coaster, Skybridge, Trail Gates, Racing, Freestyle Park &amp; Snowmaking (35 items) [3]">
+            <span class="tab-medallion-ring" aria-hidden="true"></span>
+            <span class="tab-label">Runs</span>
+            <span class="tab-count">35</span>
+          </button>
+          <button type="button" class="dock-tab" role="tab" data-tab="town" title="Sphinx Observatory, Clock Tower, Covered Bridge, Grand Hotels &amp; Dining (33 items) [4]">
+            <span class="tab-medallion-ring" aria-hidden="true"></span>
+            <span class="tab-label">Town</span>
+            <span class="tab-count">33</span>
+          </button>
+          <button type="button" class="dock-tab" role="tab" data-tab="apres" title="Winter Festival Ferris Wheel, Carousel, Ice Palace, Fireworks, Pond Hockey &amp; Forests (44 items) [5]">
+            <span class="tab-medallion-ring" aria-hidden="true"></span>
+            <span class="tab-label">Apr&egrave;s</span>
+            <span class="tab-count">44</span>
+          </button>
+        </div>
+
+        <div class="dock-utilities">
+          <button id="btn-inspect" type="button" class="medallion-tool-btn tool-inspect active" title="Inspect Skier, Lift Rider, Hockey Player, Train or Building [Esc]">
+            <span class="tool-badge">Esc</span>
+          </button>
+
+          <button id="btn-rotate" type="button" class="medallion-tool-btn tool-rotate" title="Rotate Directional Building, Curved Rail, Kicker or Bridge [R]">
+            <span id="rotate-badge" class="tool-badge">SW</span>
+          </button>
+
+          <button id="btn-bulldoze" type="button" class="medallion-tool-btn tool-bulldoze" title="Bulldoze Structure, Lift, Walkway or Tree [X]">
+            <span class="tool-badge">X</span>
+          </button>
+
+          <button id="btn-grid-expand" type="button" class="medallion-tool-btn tool-expand" title="Toggle Catalog Grid Height: 2-Row Compact / 3-Row Expanded / 1-Row Strip">
+            <span id="grid-expand-label" class="tool-badge">2-Row</span>
+          </button>
+
+          <button id="btn-dock-collapse" type="button" class="dock-collapse-stud" title="Collapse / Expand Construction Dock" aria-label="Collapse Dock">
+            <span id="dock-collapse-glyph">&#9662;</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Carved Chalet Timber Cabinet Frame -->
+      <div class="chalet-cabinet-shell">
+        <div class="chalet-ridge-cap" aria-hidden="true"></div>
+
+        <!-- Sub-Filter Chips + Instant 174-Item Parchment Search Bar -->
+        <div id="dock-subbar" class="dock-subbar">
+          <div id="dock-subfilters" class="dock-subfilters" role="group" aria-label="Category Sub-Filters"></div>
+          <div id="dock-search-wrap" class="dock-search-wrap">
+            <svg class="search-icon" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true">
+              <circle cx="6.8" cy="6.8" r="4.3" stroke="currentColor" stroke-width="1.6" fill="none"/>
+              <path d="M10.1 10.1L13.8 13.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <input id="catalog-search" type="search" class="catalog-search-input" placeholder="Filter 174 items..." aria-label="Filter 174 construction items" autocomplete="off" spellcheck="false">
+            <button id="btn-search-clear" type="button" class="search-clear-btn hidden" title="Clear Search" aria-label="Clear Search">&times;</button>
+          </div>
+          <div class="mob-subbar-actions mobile-only">
+            <button id="btn-mob-search-toggle" type="button" class="mob-subbar-btn" title="Search 174 Items" aria-label="Search Catalog">
+              <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+                <circle cx="6.8" cy="6.8" r="4.3" stroke="currentColor" stroke-width="1.7" fill="none"/>
+                <path d="M10.1 10.1L13.8 13.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <button id="btn-mob-dock-fold" type="button" class="mob-subbar-btn" title="Fold Construction Tray" aria-label="Collapse Construction Tray">&#9662;</button>
+          </div>
+        </div>
+
+        <!-- Recessed Carved-Socket Palette Tray -->
+        <div id="dock-tray-wrap" class="dock-tray-wrap">
+          <button id="btn-tray-left" type="button" class="tray-scroll-btn left hidden" aria-label="Scroll Palette Left">&lsaquo;</button>
+          <div id="dock-tray" class="dock-tray" role="listbox" aria-label="Construction Items"></div>
+          <button id="btn-tray-right" type="button" class="tray-scroll-btn right hidden" aria-label="Scroll Palette Right">&rsaquo;</button>
+        </div>
+
+        <!-- Bottom Forged Iron Ring & Frost-Pine Apron -->
+        <div class="chalet-bottom-apron" aria-hidden="true"></div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Carved Timber Restore Pill in Zen Mode -->
+  <button id="btn-zen-restore" type="button" class="zen-restore-pill hidden" title="Show Resort Controls [H]">
+    <span>Show HUD</span>
+    <span class="kbd-tag">H</span>
+  </button>
+
+  <!-- Ordered Classic Scripts (World/Sim/Renderer/Audio/Atlas 100% Untouched) -->
+  <script src="./js/atlas_data.js"></script>
+  <script src="./js/world.js"></script>
+  <script src="./js/audio.js"></script>
+  <script src="./js/simulation.js"></script>
+  <script src="./js/renderer.js"></script>
+  <script src="./js/ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,3042 @@
+/* ==========================================================================
+   ALPINE PEAK v2 — HUD STYLE 2
+   Carved Tyrolean Chalet Timber, Frost-Pine, Hemp Rope & Wrought Iron
+   Powered by Nano Banana 2 Pro (gempix-2) Transparent RGBA Sprite Atlas
+   ========================================================================== */
+
+:root {
+  --spruce-light: #b97d4b;
+  --spruce-mid: #8c5830;
+  --spruce-dark: #4f311c;
+  --walnut-deep: #2a190e;
+  --walnut-well: #1e120a;
+  --iron-slate: #3b4048;
+  --iron-dark: #1d2025;
+  --brass-bright: #f6d379;
+  --brass-gold: #dfab46;
+  --parchment-light: #f4e7cb;
+  --parchment-mid: #e6d3ad;
+  --parchment-ink: #2a180c;
+  --parchment-muted: #5c3d24;
+  --cream-text: #fdf5e6;
+  --cream-muted: #dcc7a6;
+  --mint-cash: #a7f3a0;
+  --warmth-amber: #f59e0b;
+  --thrill-cyan: #22d3ee;
+  --dock-safe-bottom: 228px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0d1726;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--cream-text);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* --------------------------------------------------------------------------
+   1. Full-Viewport Pixel Ski Mountain Stage & Cursors
+   -------------------------------------------------------------------------- */
+#sanctuary-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: 1;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  cursor: grab;
+  touch-action: none;
+}
+
+#sanctuary-canvas.cursor-panning {
+  cursor: grabbing !important;
+}
+
+#sanctuary-canvas.cursor-build {
+  cursor: crosshair;
+}
+
+#sanctuary-canvas.cursor-bulldoze {
+  cursor: not-allowed;
+}
+
+.shutter-flash {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 95;
+  transition: opacity 160ms ease-out;
+}
+
+.shutter-flash.active {
+  opacity: 0.72;
+}
+
+/* --------------------------------------------------------------------------
+   2. HUD Root & Clean Zen / ?thumb=1 Hero Modes
+   -------------------------------------------------------------------------- */
+.hud-root {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.hud-root.zen-hidden {
+  opacity: 0;
+  pointer-events: none !important;
+}
+
+.hud-root.zen-hidden * {
+  pointer-events: none !important;
+}
+
+body.thumb-mode .hud-root,
+body.thumb-mode #btn-zen-restore,
+body.thumb-mode #lift-drag-banner,
+body.thumb-mode #toast-container {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. TOP-LEFT: Carved Spruce & Wrought-Iron Vital Signs (`status_bar_empty.png`)
+   -------------------------------------------------------------------------- */
+.hud-top-left-cluster {
+  position: fixed;
+  top: 8px;
+  left: 10px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  pointer-events: none;
+}
+
+.tyrolean-status-ledger {
+  position: relative;
+  width: 404px;
+  height: 143px;
+  filter: none;
+  pointer-events: auto;
+}
+
+.tyrolean-status-ledger::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("../assets/hud_style2/status_bar_empty.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 6px 14px rgba(10, 8, 5, 0.58));
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* 4 Recessed Rope-Rimmed Stat Wells (calibrated to status_bar_empty.png) */
+.ledger-well {
+  position: absolute;
+  z-index: 1;
+  top: 20.2%;
+  height: 15.2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 3px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.well-cash {
+  left: 13.37%;
+  width: 13.87%;
+}
+
+.well-crowd {
+  left: 33.33%;
+  width: 13.71%;
+}
+
+.well-rating {
+  left: 53.30%;
+  width: 13.71%;
+}
+
+.well-runs {
+  left: 73.10%;
+  width: 13.87%;
+  gap: 3px;
+}
+
+.stat-mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.92);
+}
+
+.cash-text {
+  color: var(--mint-cash);
+  font-size: 11px;
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+.well-cash.pulse-gain .cash-text {
+  color: #fef08a;
+  transform: scale(1.1);
+}
+
+.crowd-mtn {
+  color: #bae6fd;
+  font-size: 10.5px;
+}
+
+.crowd-sep {
+  color: #b08d6a;
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.crowd-vil {
+  color: #fde68a;
+  font-size: 10.5px;
+}
+
+.star-glyph {
+  color: var(--brass-bright);
+  font-size: 11px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.85));
+}
+
+.rating-text {
+  color: #fffbeb;
+  font-size: 11.5px;
+}
+
+.run-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5px;
+}
+
+.run-pair .stat-mono {
+  font-size: 9.5px;
+  color: #f8fafc;
+}
+
+.run-sign {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.sign-green {
+  border-radius: 50%;
+  background: #22c55e;
+  border: 1px solid #bbf7d0;
+}
+
+.sign-blue {
+  border-radius: 1px;
+  background: #3b82f6;
+  border: 1px solid #bfdbfe;
+}
+
+.sign-black {
+  width: 5.5px;
+  height: 5.5px;
+  background: #0f172a;
+  border: 1px solid #e2e8f0;
+  transform: rotate(45deg);
+}
+
+/* 2 Live Dynamic Glass Meter Tubes (Warmth & Slope Thrill) */
+.ledger-tube {
+  position: absolute;
+  z-index: 1;
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tube-warmth {
+  left: 20.81%;
+  top: 55.50%;
+  width: 25.55%;
+  height: 12.44%;
+}
+
+.tube-thrill {
+  left: 60.24%;
+  top: 55.02%;
+  width: 25.38%;
+  height: 12.92%;
+}
+
+.ledger-tube-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 2px;
+  transform-origin: left center;
+  transform: scaleX(var(--fill-scale, 1));
+  will-change: transform;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ledger-tube-fill[style*="width"] {
+  transform: none;
+}
+
+.fill-warmth {
+  background: linear-gradient(180deg, #fde68a 0%, #f59e0b 48%, #b45309 100%);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.55);
+}
+
+.fill-thrill {
+  background: linear-gradient(180deg, #cffafe 0%, #06b6d4 48%, #0369a1 100%);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.55);
+}
+
+.ledger-tube-gloss {
+  position: absolute;
+  left: 1px;
+  right: 1px;
+  top: 1px;
+  height: 36%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.04));
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.ledger-tube-caption {
+  position: relative;
+  z-index: 2;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fffdf7;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.96), 0 0 4px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+
+/* Slim Carved Walnut Studio Strip underneath Status Bar */
+.tyrolean-studio-strip {
+  margin-left: 16px;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 4px;
+  padding: 4px 8px;
+  background: linear-gradient(180deg, #5c3a22 0%, #3b2415 100%);
+  border: 2px solid #23140b;
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(235, 184, 126, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+
+.studio-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #24150c;
+  color: var(--parchment-light);
+  border: 1px solid #7c5130;
+  border-radius: 5px;
+  padding: 3px 18px 3px 7px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, #e6b968 50%),
+    linear-gradient(135deg, #e6b968 50%, transparent 50%);
+  background-position: calc(100% - 10px) 52%, calc(100% - 6px) 52%;
+  background-size: 4px 4px, 4px 4px;
+  background-repeat: no-repeat;
+}
+
+.studio-select:focus {
+  outline: 1px solid var(--brass-bright);
+}
+
+.timber-mini-btn,
+.timber-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  padding: 0 7px;
+  background: linear-gradient(180deg, #74492b 0%, #4d2f1a 100%);
+  color: var(--parchment-light);
+  border: 1px solid #201209;
+  border-radius: 5px;
+  box-shadow: inset 0 1px 0 rgba(246, 211, 121, 0.28);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  filter: none;
+  transition: transform 90ms ease, border-color 120ms ease, box-shadow 120ms ease, background 120ms ease, color 120ms ease;
+}
+
+.timber-icon-btn {
+  width: 23px;
+  padding: 0;
+}
+
+.timber-mini-btn:hover:not(:disabled),
+.timber-icon-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #875533 0%, #5a371f 100%);
+  border-color: var(--brass-gold);
+  box-shadow: inset 0 1px 0 rgba(246, 211, 121, 0.45);
+}
+
+.timber-mini-btn:active:not(:disabled),
+.timber-icon-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.timber-icon-btn:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+/* v3 Carved Spruce & Brass Micro-Controls: Festive Finale [F] & Showcase Tour [C] */
+.timber-festive-btn,
+.timber-showcase-btn {
+  gap: 4px;
+  padding: 0 6px 0 7px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fff6e3;
+  border-color: #6b4323;
+  box-shadow:
+    inset 0 1px 0 rgba(230, 185, 104, 0.38),
+    0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.timber-festive-btn {
+  background: linear-gradient(180deg, #844d28 0%, #532e17 100%);
+}
+
+.timber-showcase-btn {
+  background: linear-gradient(180deg, #6f4528 0%, #462a17 100%);
+}
+
+.timber-festive-btn:hover:not(:disabled),
+.timber-showcase-btn:hover:not(:disabled) {
+  border-color: #e6b968;
+  color: #fffdf5;
+  background: linear-gradient(180deg, #985a30 0%, #61371c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(246, 211, 121, 0.54),
+    0 0 7px rgba(230, 185, 104, 0.32);
+}
+
+.timber-showcase-btn.active,
+.timber-showcase-btn[aria-pressed="true"] {
+  background: linear-gradient(180deg, #c9862b 0%, #875116 100%);
+  border-color: #fde047;
+  color: #fffbeb;
+  box-shadow:
+    inset 0 1px 0 rgba(254, 240, 138, 0.68),
+    0 0 10px rgba(245, 158, 11, 0.62),
+    0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+.timber-festive-btn.active,
+.timber-festive-btn[aria-pressed="true"] {
+  background: linear-gradient(180deg, #f6d379 0%, #ce8a28 100%);
+  border-color: #fef08a;
+  color: #241306;
+  text-shadow: 0 1px 0 rgba(255, 251, 235, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 253, 240, 0.78),
+    0 0 12px rgba(250, 204, 21, 0.74),
+    0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+.mini-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 13px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: rgba(20, 11, 5, 0.62);
+  border: 1px solid rgba(230, 185, 104, 0.48);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  line-height: 1;
+  color: #e6b968;
+  text-shadow: none;
+}
+
+.timber-showcase-btn.active .mini-kbd,
+.timber-showcase-btn[aria-pressed="true"] .mini-kbd {
+  background: rgba(28, 15, 6, 0.72);
+  border-color: #fde047;
+  color: #fef08a;
+}
+
+.timber-festive-btn.active .mini-kbd,
+.timber-festive-btn[aria-pressed="true"] .mini-kbd {
+  background: rgba(36, 19, 6, 0.85);
+  border-color: #291507;
+  color: #fde047;
+}
+
+.timber-sep {
+  width: 1px;
+  height: 14px;
+  background: rgba(244, 231, 203, 0.2);
+  margin: 0 1px;
+}
+
+/* --------------------------------------------------------------------------
+   4. TOP-RIGHT: 3-Sector Timber Atmosphere Wheel + 3 Carved Action Pills
+   -------------------------------------------------------------------------- */
+.hud-top-right-stack {
+  position: fixed;
+  top: 8px;
+  right: 12px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.atmo-wheel-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 26px;
+  pointer-events: auto;
+}
+
+.atmo-wheel,
+.tyrolean-sundial {
+  position: relative;
+  width: 124px;
+  height: 124px;
+  border-radius: 50%;
+  filter: none;
+}
+
+.atmo-wheel::before,
+.tyrolean-sundial::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 50%;
+  background: url("../assets/hud_style2/atmo_dial.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 6px 14px rgba(8, 6, 4, 0.6));
+  will-change: transform;
+  pointer-events: none;
+}
+
+.atmo-wedge {
+  position: absolute;
+  z-index: 1;
+  inset: 12%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 140ms ease;
+}
+
+/* 3 Exact 120-degree Sectors matching atmo_dial.png artwork */
+.wedge-day {
+  clip-path: polygon(50% 50%, 50% 0%, 0% 0%, 0% 79%);
+}
+
+.wedge-alpenglow {
+  clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 79%);
+}
+
+.wedge-night {
+  clip-path: polygon(50% 50%, 100% 79%, 100% 100%, 0% 100%, 0% 79%);
+}
+
+.atmo-wedge:hover {
+  background: radial-gradient(circle, transparent 28%, rgba(255, 243, 176, 0.24) 70%);
+}
+
+.atmo-wedge.active {
+  background: radial-gradient(circle, transparent 42%, rgba(253, 224, 71, 0.32) 86%, rgba(253, 224, 71, 0.55) 100%);
+}
+
+/* Rotating Brass Compass Pointer Needle */
+.atmo-wheel-needle {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 36px;
+  margin-left: -2px;
+  margin-top: -34px;
+  transform-origin: 50% 34px;
+  transform: rotate(-56deg);
+  will-change: transform;
+  pointer-events: none;
+  transition: transform 280ms cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+.atmo-wheel-needle::before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  margin: 0 auto;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 16px solid #fde047;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.92));
+}
+
+.atmo-wheel[data-active-atmo="day"] .atmo-wheel-needle {
+  transform: rotate(-56deg);
+}
+
+.atmo-wheel[data-active-atmo="alpenglow"] .atmo-wheel-needle {
+  transform: rotate(56deg);
+}
+
+.atmo-wheel[data-active-atmo="night"] .atmo-wheel-needle {
+  transform: rotate(180deg);
+}
+
+.atmo-wheel-plaque {
+  margin-top: -8px;
+  position: relative;
+  z-index: 3;
+  padding: 2px 10px;
+  background: linear-gradient(180deg, #5e3b22 0%, #372012 100%);
+  border: 1.5px solid #1e1108;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(246, 211, 121, 0.4), 0 3px 8px rgba(0, 0, 0, 0.5);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--brass-bright);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}
+
+/* 3 Stacked Carved Action Pills */
+.carved-action-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.carved-pill {
+  position: relative;
+  width: 192px;
+  border: none;
+  background-color: transparent;
+  padding: 0 12px 0 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  filter: none;
+  transition: transform 100ms ease;
+}
+
+.carved-pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 4px 9px rgba(8, 6, 4, 0.52));
+  will-change: transform;
+  pointer-events: none;
+}
+
+.pill-guide {
+  height: 44px;
+}
+
+.pill-guide::before {
+  background-image: url("../assets/hud_style2/pill_guide.png");
+}
+
+.pill-mode {
+  height: 49px;
+}
+
+.pill-mode::before {
+  background-image: url("../assets/hud_style2/pill_mode.png");
+}
+
+.pill-snapshot {
+  height: 44px;
+}
+
+.pill-snapshot::before {
+  background-image: url("../assets/hud_style2/pill_snapshot.png");
+}
+
+.carved-pill:hover {
+  transform: translateY(-1px);
+}
+
+.carved-pill:hover::before {
+  filter: brightness(1.1) drop-shadow(0 5px 12px rgba(8, 6, 4, 0.65));
+}
+
+.carved-pill:active {
+  transform: translateY(1px);
+}
+
+.carved-pill.active::before,
+.pill-mode.free-build::before {
+  filter: brightness(1.14) drop-shadow(0 0 10px rgba(246, 211, 121, 0.48));
+}
+
+.carved-pill-text {
+  position: relative;
+  z-index: 1;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fff8eb;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.92);
+  white-space: nowrap;
+}
+
+.pill-mode.free-build .carved-pill-text {
+  color: #fef08a;
+}
+
+.carved-pill-kbd {
+  position: relative;
+  z-index: 1;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(20, 11, 5, 0.58);
+  border: 1px solid rgba(246, 211, 121, 0.42);
+  color: var(--brass-bright);
+}
+
+.notify-dot {
+  position: absolute;
+  z-index: 2;
+  top: 6px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  border: 1.5px solid #fef2f2;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.85);
+}
+
+/* --------------------------------------------------------------------------
+   5. TOP-CENTER: Carved Mountain-Seal & Parchment Banner (`milestone_banner.png`)
+   -------------------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.field-toast {
+  position: relative;
+  width: 368px;
+  height: 146px;
+  filter: none;
+  display: flex;
+  align-items: center;
+  padding: 40px 46px 42px 136px;
+  animation: toastSlideIn 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.field-toast::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("../assets/hud_style2/milestone_banner.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 8px 18px rgba(12, 8, 4, 0.62));
+  will-change: transform;
+  pointer-events: none;
+}
+
+.field-toast.leaving {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.97);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toast-thumb {
+  position: absolute;
+  z-index: 1;
+  left: 82px;
+  bottom: 24px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: rgba(34, 21, 12, 0.9);
+  border: 1.5px solid var(--brass-gold);
+  padding: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.65);
+}
+
+.toast-thumb[data-sprite],
+.toast-thumb.palette-thumb-sprite,
+.toast-thumb.thumb-sprite {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+}
+
+.toast-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.toast-eyebrow {
+  font-family: "Cinzel", "Newsreader", Georgia, serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7c3f11;
+  line-height: 1.15;
+}
+
+.toast-message {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--parchment-ink);
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.toast-reward {
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: 10.5px;
+  color: #15803d;
+}
+
+/* Live Ski-Lift Drag Helper Banner (matching Carved Parchment Scroll) */
+.lift-drag-banner {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 48;
+  max-width: min(520px, calc(100vw - 640px));
+  padding: 8px 18px;
+  background: linear-gradient(180deg, #f5e9ce 0%, #e4cfa4 100%);
+  color: var(--parchment-ink);
+  border: 3px solid #4f311c;
+  outline: 1.5px solid #1f1209;
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1.5px #b07d48,
+    0 8px 20px rgba(0, 0, 0, 0.55);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  pointer-events: none;
+}
+
+.lift-drag-banner.invalid {
+  background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%);
+  color: #7f1d1d;
+  border-color: #991b1b;
+}
+
+/* --------------------------------------------------------------------------
+   6. BOTTOM-LEFT: Isometric 2:1 Diamond Timber & Brass-Compass Minimap
+   -------------------------------------------------------------------------- */
+.tyrolean-minimap {
+  position: fixed;
+  left: 8px;
+  bottom: 6px;
+  width: 256px;
+  height: 168px;
+  z-index: 32;
+  pointer-events: auto;
+  filter: none;
+}
+
+.tyrolean-minimap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: url("../assets/hud_style2/minimap_bezel.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 8px 16px rgba(8, 6, 4, 0.65));
+  will-change: transform;
+  pointer-events: none;
+}
+
+.minimap-bezel-bg {
+  display: none;
+}
+
+/* Clipped to exact measured 2:1 inner rope diamond of minimap_bezel.png */
+.minimap-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  clip-path: polygon(49.91% 33.4%, 78.51% 56.79%, 49.91% 78.95%, 21.68% 56.79%);
+  cursor: crosshair;
+  image-rendering: pixelated;
+}
+
+/* Overlays the brass compass rose & crown cleanly atop the north apex of the canvas */
+.minimap-compass-cap {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: url("../assets/hud_style2/minimap_bezel.png") center / 100% 100% no-repeat;
+  clip-path: polygon(34% 0%, 66% 0%, 63% 38%, 50% 42%, 37% 38%);
+  pointer-events: none;
+}
+
+/* Carved Wooden Stud Controls along Lower Bezel */
+.minimap-stud {
+  position: absolute;
+  z-index: 4;
+  width: 22px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1.5px solid #22130a;
+  background: radial-gradient(circle at 38% 32%, #a86f40 0%, #6d4323 68%, #472a15 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(252, 224, 166, 0.45),
+    0 2px 4px rgba(0, 0, 0, 0.65);
+  color: #fff6e5;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 90ms ease, filter 120ms ease, border-color 120ms ease;
+}
+
+.minimap-stud:hover {
+  filter: brightness(1.18);
+  border-color: var(--brass-bright);
+}
+
+.minimap-stud:active {
+  transform: translate(-50%, -46%) scale(0.95);
+}
+
+.minimap-stud.active {
+  background: radial-gradient(circle at 38% 32%, #f6d379 0%, #c98a2c 70%, #7c4d12 100%);
+  color: #241306;
+  border-color: #fef08a;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
+}
+
+/* Exact measured centers of the 4 lower bezel studs + center apex speed stud */
+.stud-zoom-out {
+  left: 25.99%;
+  top: 75.18%;
+  font-size: 12px;
+}
+
+.stud-zoom-in {
+  left: 33.55%;
+  top: 82.88%;
+  font-size: 12px;
+}
+
+.minimap-speed-studs {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.minimap-speed-studs .minimap-stud {
+  pointer-events: auto;
+}
+
+.stud-speed-0 {
+  left: 59.2%;
+  top: 87.8%;
+}
+
+.stud-speed-1 {
+  left: 66.39%;
+  top: 83.10%;
+}
+
+.stud-speed-2 {
+  left: 73.98%;
+  top: 75.20%;
+}
+
+/* --------------------------------------------------------------------------
+   7. BOTTOM-CENTER: Pitched Chalet-Roof 152-Item Construction Dock
+      Strictly bounded between Minimap (left) & Inspector Card (right) -> 0 Overlap!
+   -------------------------------------------------------------------------- */
+.build-dock,
+.tyrolean-dock {
+  position: fixed;
+  left: 274px;
+  width: min(772px, calc(100vw - 630px));
+  bottom: 14px;
+  z-index: 34;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  filter: none;
+  pointer-events: none;
+}
+
+/* Floating Parchment & Timber Hover Tooltip */
+.palette-tooltip {
+  align-self: center;
+  margin-bottom: 5px;
+  max-width: 470px;
+  padding: 6px 12px;
+  background: linear-gradient(180deg, #f6ead1 0%, #e7d3ab 100%);
+  color: var(--parchment-ink);
+  border: 2.5px solid #4e301a;
+  border-radius: 8px;
+  box-shadow:
+    inset 0 0 0 1px #b6844f,
+    0 6px 16px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.tooltip-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.tooltip-title {
+  font-family: "Cinzel", "Plus Jakarta Sans", serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #261408;
+}
+
+.tooltip-cost {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #166534;
+}
+
+.tooltip-desc {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--parchment-muted);
+  line-height: 1.28;
+}
+
+/* Top Medallion Ridge: 5 Rope Category Medallions + 4 Circular Tool Medallions */
+.dock-medallion-ridge {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 6px;
+  margin-bottom: -8px;
+  pointer-events: auto;
+}
+
+.dock-tabs-rope {
+  position: relative;
+  width: 344px;
+  height: 69px;
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  filter: none;
+}
+
+.dock-tabs-rope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("../assets/hud_style2/cat_tabs.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 4px 10px rgba(8, 5, 3, 0.62));
+  will-change: transform;
+  pointer-events: none;
+}
+
+.dock-tab {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.tab-medallion-ring {
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2.5px solid transparent;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 120ms ease;
+  pointer-events: none;
+}
+
+.dock-tab:hover .tab-medallion-ring {
+  border-color: rgba(253, 224, 71, 0.65);
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+}
+
+.dock-tab.active .tab-medallion-ring {
+  border-color: #fde047;
+  box-shadow:
+    0 0 0 2px rgba(36, 19, 8, 0.85),
+    0 0 14px rgba(250, 204, 21, 0.85),
+    inset 0 0 10px rgba(253, 224, 71, 0.35);
+}
+
+.tab-label {
+  position: relative;
+  z-index: 2;
+  margin-bottom: -3px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(29, 17, 9, 0.92);
+  border: 1px solid #7c5130;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--cream-muted);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.dock-tab.active .tab-label {
+  background: linear-gradient(180deg, #f6d379 0%, #ce8f2d 100%);
+  border-color: #291608;
+  color: #231206;
+}
+
+.tab-count {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  z-index: 2;
+  min-width: 17px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: rgba(26, 15, 8, 0.9);
+  border: 1px solid rgba(230, 185, 104, 0.55);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: var(--brass-bright);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 4 Circular Tree-Ring Utility Medallions (`tool_inspect`, `tool_rotate`, `tool_bulldoze`, `tool_camera`) */
+.dock-utilities {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.medallion-tool-btn {
+  position: relative;
+  width: 50px;
+  height: 51px;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  cursor: pointer;
+  filter: none;
+  transition: transform 100ms ease;
+}
+
+.medallion-tool-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 4px 8px rgba(8, 5, 3, 0.6));
+  will-change: transform;
+  pointer-events: none;
+}
+
+.tool-inspect::before {
+  background-image: url("../assets/hud_style2/tool_inspect.png");
+}
+
+.tool-rotate::before {
+  background-image: url("../assets/hud_style2/tool_rotate.png");
+}
+
+.tool-bulldoze::before {
+  background-image: url("../assets/hud_style2/tool_bulldoze.png");
+}
+
+.tool-expand::before {
+  background-image: url("../assets/hud_style2/tool_camera.png");
+}
+
+.medallion-tool-btn:hover {
+  transform: translateY(-2px);
+}
+
+.medallion-tool-btn:hover::before {
+  filter: brightness(1.12) drop-shadow(0 5px 10px rgba(8, 5, 3, 0.72));
+}
+
+.medallion-tool-btn:active {
+  transform: translateY(1px);
+}
+
+.medallion-tool-btn.active::before {
+  filter: brightness(1.14) drop-shadow(0 0 9px rgba(253, 224, 71, 0.8));
+}
+
+.medallion-tool-btn.active::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 2px;
+  border-radius: 50%;
+  border: 2px solid #fde047;
+  pointer-events: none;
+}
+
+.tool-bulldoze.active::after {
+  border-color: #f87171;
+}
+
+.tool-badge {
+  position: absolute;
+  z-index: 2;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgba(25, 14, 7, 0.94);
+  border: 1px solid #8a5a32;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: var(--parchment-light);
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+}
+
+.medallion-tool-btn.active .tool-badge {
+  background: #fde047;
+  border-color: #291507;
+  color: #231206;
+}
+
+.tool-bulldoze.active .tool-badge {
+  background: #ef4444;
+  color: #fff;
+}
+
+.dock-collapse-stud {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid #1f1108;
+  background: radial-gradient(circle at 35% 30%, #9b6438 0%, #58351c 75%);
+  box-shadow: inset 0 1px 0 rgba(252, 224, 166, 0.4), 0 3px 6px rgba(0, 0, 0, 0.55);
+  color: var(--brass-bright);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dock-collapse-stud:hover {
+  filter: brightness(1.15);
+}
+
+/* Carved Chalet Cabinet Body */
+.chalet-cabinet-shell {
+  position: relative;
+  z-index: 2;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(214, 148, 86, 0.28), transparent 68%),
+    linear-gradient(180deg, #613d22 0%, #482c18 55%, #392212 100%);
+  border: 4px solid #8a5832;
+  outline: 2px solid #1b1008;
+  border-radius: 12px 12px 10px 10px;
+  box-shadow:
+    inset 0 2px 0 rgba(242, 192, 132, 0.44),
+    inset 0 0 16px rgba(14, 7, 3, 0.62),
+    0 10px 26px rgba(6, 4, 2, 0.68);
+  padding: 12px 10px 26px;
+  pointer-events: auto;
+}
+
+/* Wrought-Iron Corner Rivet Plates on Cabinet */
+.chalet-cabinet-shell::before,
+.chalet-cabinet-shell::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  width: 24px;
+  height: 20px;
+  background: linear-gradient(135deg, #555c66 0%, #2b3038 100%);
+  border: 1.5px solid #14171c;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+}
+
+.chalet-cabinet-shell::before {
+  left: -4px;
+  border-radius: 10px 0 6px 0;
+}
+
+.chalet-cabinet-shell::after {
+  right: -4px;
+  border-radius: 0 10px 0 6px;
+}
+
+.chalet-ridge-cap {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 62px;
+  height: 32px;
+  background: url("../assets/hud_style2/chalet_ridge_crest.png") center / 100% 100% no-repeat;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Genuine Bottom Sill Beam + Central Wrought-Iron Ring & Frost-Pine Garland */
+.chalet-bottom-apron {
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  bottom: -14px;
+  height: 38px;
+  background: url("../assets/hud_style2/chalet_apron_wide.png") center top / 100% 100% no-repeat;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Collapsed Dock Mode */
+.build-dock.collapsed .chalet-cabinet-shell,
+.tyrolean-dock.collapsed .chalet-cabinet-shell {
+  display: none;
+}
+
+.build-dock.collapsed .dock-medallion-ridge,
+.tyrolean-dock.collapsed .dock-medallion-ridge {
+  margin-bottom: 2px;
+}
+
+/* Sub-Filter Chips + Parchment Search Input */
+.dock-subbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px 6px;
+  border-bottom: 1px solid rgba(186, 134, 82, 0.24);
+  margin-bottom: 6px;
+}
+
+.dock-subfilters {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.dock-subfilters::-webkit-scrollbar {
+  display: none;
+}
+
+.subfilter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid #6b4325;
+  background: rgba(28, 16, 8, 0.72);
+  color: var(--cream-muted);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.subfilter-chip:hover {
+  border-color: var(--brass-gold);
+  color: #fff;
+}
+
+.subfilter-chip.active {
+  background: linear-gradient(180deg, #8f5a31 0%, #5e391d 100%);
+  border-color: var(--brass-bright);
+  color: #fffbeb;
+  box-shadow: inset 0 1px 0 rgba(253, 224, 71, 0.35);
+}
+
+.subfilter-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  opacity: 0.85;
+  color: var(--brass-bright);
+}
+
+.dock-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 158px;
+  flex-shrink: 0;
+}
+
+.search-icon {
+  position: absolute;
+  left: 7px;
+  color: #6d482a;
+  pointer-events: none;
+}
+
+.catalog-search-input {
+  width: 100%;
+  height: 24px;
+  padding: 0 22px 0 23px;
+  border-radius: 6px;
+  border: 1.5px solid #6b4426;
+  background: linear-gradient(180deg, #efe0c1 0%, #e1cda5 100%);
+  color: var(--parchment-ink);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.catalog-search-input::placeholder {
+  color: #7c5838;
+}
+
+.catalog-search-input:focus {
+  outline: 1.5px solid var(--brass-bright);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(68, 41, 21, 0.2);
+  color: #3d2310;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Recessed Socket Palette Grid (`socket_idle.png` & `socket_active.png`) */
+.dock-tray-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dock-tray {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: 6px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2px 3px 4px;
+  contain: layout style;
+  scrollbar-width: thin;
+  scrollbar-color: #8c5830 #1d1109;
+}
+
+.build-dock.rows-2 .dock-tray,
+.tyrolean-dock.rows-2 .dock-tray {
+  max-height: 156px;
+}
+
+.build-dock.rows-3 .dock-tray,
+.tyrolean-dock.rows-3 .dock-tray {
+  max-height: 234px;
+}
+
+.build-dock.rows-1 .dock-tray,
+.tyrolean-dock.rows-1 .dock-tray {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-height: 82px;
+}
+
+.build-dock.rows-1 .palette-card,
+.tyrolean-dock.rows-1 .palette-card {
+  flex: 0 0 76px;
+}
+
+.dock-tray::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dock-tray::-webkit-scrollbar-track {
+  background: #1d1109;
+  border-radius: 4px;
+}
+
+.dock-tray::-webkit-scrollbar-thumb {
+  background: #8c5830;
+  border-radius: 4px;
+}
+
+/* Authentic Style 2 Carved Timber Socket Card (Pre-Baked Contrast + Zero Runtime Filter) */
+.palette-card {
+  position: relative;
+  height: 74px;
+  border: none;
+  border-radius: 7px;
+  background: url("../assets/hud_style2/socket_idle_opt.png") center / 100% 100% no-repeat;
+  padding: 5px 4px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  filter: none;
+  box-shadow: 0 2px 4px rgba(10, 5, 2, 0.55);
+  transition: transform 90ms ease, box-shadow 120ms ease;
+}
+
+.palette-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 3px 6px rgba(10, 5, 2, 0.68),
+    inset 0 0 0 99px rgba(255, 236, 204, 0.08);
+}
+
+/* Genuine Nano Banana 2 Pro Golden Hemp-Rope Active Socket! */
+.palette-card.active {
+  background-image: url("../assets/hud_style2/socket_active_opt.png");
+  box-shadow:
+    0 0 9px rgba(250, 204, 21, 0.52),
+    0 2px 4px rgba(10, 5, 2, 0.55);
+}
+
+.palette-card.active:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 11px rgba(250, 204, 21, 0.64),
+    0 3px 6px rgba(10, 5, 2, 0.68);
+}
+
+.palette-card.unaffordable {
+  opacity: 0.55;
+}
+
+.palette-card.unaffordable .palette-cost-badge {
+  color: #fca5a5;
+}
+
+.palette-thumb-wrap {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.palette-thumb {
+  width: 40px;
+  height: 40px;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.72));
+}
+
+.palette-thumb.thumb-baked {
+  filter: none;
+}
+
+.palette-thumb-sprite,
+.palette-thumb.thumb-sprite,
+.palette-thumb[data-sprite],
+.thumb-sprite,
+[data-sprite] {
+  display: block;
+  background-image: url("../assets/hud_thumbnails.png");
+  background-repeat: no-repeat;
+  background-position: var(--thumb-x, 0px) var(--thumb-y, 0px);
+  background-size: var(--thumb-sheet-w, auto) var(--thumb-sheet-h, auto);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: none;
+  flex-shrink: 0;
+}
+
+.palette-thumb-sprite,
+.palette-thumb.thumb-sprite,
+.palette-thumb[data-sprite] {
+  width: 40px;
+  height: 40px;
+}
+
+.palette-label,
+.dock-card-name {
+  width: 100%;
+  margin-bottom: 8px;
+  font-size: 9.2px;
+  font-weight: 700;
+  color: var(--parchment-light);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95);
+  line-height: 1.1;
+}
+
+.palette-cost-badge {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: rgba(18, 10, 5, 0.78);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--mint-cash);
+  line-height: 1.25;
+}
+
+.palette-drag-tag,
+.palette-rot-tag {
+  position: absolute;
+  top: 4px;
+  left: 5px;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: rgba(30, 58, 138, 0.85);
+  border: 1px solid rgba(147, 197, 253, 0.45);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 7.5px;
+  font-weight: 700;
+  color: #e0f2fe;
+  line-height: 1.25;
+}
+
+.palette-rot-tag {
+  background: rgba(68, 40, 18, 0.88);
+  border-color: rgba(246, 211, 121, 0.45);
+  color: var(--brass-bright);
+}
+
+.palette-sculpt-badge {
+  position: absolute;
+  bottom: 0;
+  right: -2px;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid #94a3b8;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.palette-empty-msg {
+  grid-column: 1 / -1;
+  padding: 18px;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--cream-muted);
+}
+
+.tray-scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 24px;
+  height: 44px;
+  border-radius: 6px;
+  border: 1.5px solid #231309;
+  background: linear-gradient(180deg, #8c5830 0%, #4f311c 100%);
+  color: var(--brass-bright);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tray-scroll-btn.left {
+  left: -4px;
+}
+
+.tray-scroll-btn.right {
+  right: -4px;
+}
+
+/* --------------------------------------------------------------------------
+   8. BOTTOM-RIGHT: Carved Timber, Rope & Parchment Live Inspector Card
+      (`inspector_card_empty.png` — 365 x 235)
+   -------------------------------------------------------------------------- */
+.inspector-card,
+.tyrolean-inspector-card {
+  position: fixed;
+  right: 10px;
+  bottom: 8px;
+  width: 338px;
+  height: 218px;
+  z-index: 35;
+  filter: none;
+  pointer-events: auto;
+}
+
+.inspector-card::before,
+.tyrolean-inspector-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("../assets/hud_style2/inspector_card_empty.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 8px 18px rgba(8, 5, 3, 0.68));
+  will-change: transform;
+  pointer-events: none;
+}
+
+.insp-close-stud {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 5;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid #1a1008;
+  background: radial-gradient(circle at 35% 35%, #5b626e 0%, #2c313a 75%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 5px rgba(0, 0, 0, 0.65);
+  color: #fef2f2;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.insp-close-stud:hover {
+  background: radial-gradient(circle at 35% 35%, #dc2626 0%, #7f1d1d 80%);
+}
+
+/* Left Rope-Trimmed Portrait Recess (left=14.79%, top=21.70%, w=28.77%, h=54.89%) */
+.insp-portrait-well {
+  position: absolute;
+  z-index: 1;
+  left: 14.79%;
+  top: 21.70%;
+  width: 28.77%;
+  height: 54.89%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.insp-portrait {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.75));
+}
+
+.insp-portrait[data-sprite],
+.insp-portrait.palette-thumb-sprite,
+.insp-portrait.thumb-sprite,
+.insp-portrait.thumb-baked {
+  width: 64px;
+  height: 64px;
+  filter: none;
+}
+
+.insp-meta {
+  position: absolute;
+  bottom: 3px;
+  left: 4px;
+  right: 4px;
+  text-align: center;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(18, 10, 5, 0.78);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: var(--mint-cash);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.insp-follow-btn {
+  position: absolute;
+  z-index: 2;
+  left: 15.2%;
+  bottom: 6.2%;
+  width: 28%;
+  height: 21px;
+  border-radius: 999px;
+  border: 1.5px solid #221309;
+  background: linear-gradient(180deg, #8b5830 0%, #533219 100%);
+  box-shadow: inset 0 1px 0 rgba(253, 224, 71, 0.35), 0 2px 5px rgba(0, 0, 0, 0.6);
+  color: var(--parchment-light);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.insp-follow-btn:hover {
+  filter: brightness(1.14);
+}
+
+.insp-follow-btn.active {
+  background: linear-gradient(180deg, #f6d379 0%, #c88a2b 100%);
+  color: #231206;
+  border-color: #fef08a;
+}
+
+/* Upper-Right Dual Glass Meter Tubes (calibrated to inspector_card_empty.png) */
+.insp-meters {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+}
+
+.insp-tube {
+  position: absolute;
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.insp-tube-warmth {
+  left: 55.34%;
+  top: 19.15%;
+  width: 34.52%;
+  height: 5.96%;
+}
+
+.insp-tube-thrill {
+  left: 55.34%;
+  top: 33.19%;
+  width: 35.07%;
+  height: 5.96%;
+}
+
+.insp-meter-fill,
+.insp-need-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(var(--fill-scale, 1));
+  will-change: transform;
+  transition: transform 260ms ease;
+}
+
+.insp-meter-fill[style*="width"],
+.insp-need-fill[style*="width"] {
+  transform: none;
+}
+
+.insp-meter-val {
+  position: relative;
+  z-index: 2;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8px;
+  font-weight: 700;
+  color: #fffdf8;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.96);
+  line-height: 1;
+}
+
+.insp-static-header {
+  position: absolute;
+  z-index: 1;
+  left: 55%;
+  top: 23%;
+  width: 35%;
+  text-align: center;
+  pointer-events: none;
+}
+
+.insp-static-tag {
+  font-family: "Cinzel", serif;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--brass-bright);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95);
+}
+
+/* Lower-Right Torn-Edge Parchment Box (left=50.68%, top=45.53%, w=43.01%, h=35.74%) */
+.insp-parchment-box {
+  position: absolute;
+  z-index: 1;
+  left: 50.68%;
+  top: 45.53%;
+  width: 43.01%;
+  height: 35.74%;
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.insp-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.insp-name {
+  font-family: "Cinzel", "Plus Jakarta Sans", serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #241307;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.insp-badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8px;
+  font-weight: 700;
+  color: #7c3f11;
+  background: rgba(140, 88, 48, 0.16);
+  padding: 0 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.insp-action {
+  font-size: 9.2px;
+  font-weight: 700;
+  color: #3f2410;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.insp-thought {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 9.5px;
+  color: #55361d;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   9. SLIDE-OVER: Carved Tyrolean Timber & Parchment Resort Guide Drawer
+   -------------------------------------------------------------------------- */
+.guide-drawer {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  width: 352px;
+  max-height: calc(100vh - 24px);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #4b301c 0%, #2e1c10 100%);
+  border: 4px solid #7d4f2b;
+  outline: 2px solid #1b0f07;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 2px 0 rgba(235, 184, 124, 0.36),
+    0 16px 38px rgba(5, 3, 2, 0.78);
+  transform: translateX(calc(100% + 28px));
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease;
+}
+
+.guide-drawer.open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.guide-header {
+  position: relative;
+  padding: 12px 38px 10px 14px;
+  background: linear-gradient(180deg, #633f24 0%, #432a17 100%);
+  border-bottom: 2px solid #221309;
+  border-radius: 8px 8px 0 0;
+}
+
+.guide-close {
+  top: 10px;
+  right: 10px;
+}
+
+.guide-title {
+  margin: 0;
+  font-family: "Cinzel", serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brass-bright);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+}
+
+.guide-subtitle {
+  margin: 3px 0 0;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--cream-muted);
+}
+
+.guide-body {
+  padding: 10px 12px 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #8c5830 #1d1109;
+}
+
+.guide-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.guide-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px dashed rgba(230, 185, 104, 0.32);
+  padding-bottom: 3px;
+}
+
+.section-eyebrow {
+  font-family: "Cinzel", serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--brass-bright);
+  letter-spacing: 0.04em;
+}
+
+.section-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  color: var(--cream-muted);
+}
+
+.econ-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.econ-stat-box {
+  padding: 6px 8px;
+  border-radius: 7px;
+  background: rgba(24, 14, 7, 0.72);
+  border: 1px solid #6b4325;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.econ-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--cream-muted);
+}
+
+.econ-val {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.val-cash {
+  color: var(--mint-cash);
+}
+
+.val-warm {
+  color: #fcd34d;
+}
+
+.val-thrill {
+  color: #67e8f9;
+}
+
+.lifts-status-list,
+.challenges-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.lift-row-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: rgba(28, 16, 8, 0.74);
+  border: 1px solid #684124;
+  cursor: pointer;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.lift-row-card:hover {
+  border-color: var(--brass-bright);
+  background: rgba(58, 35, 19, 0.85);
+}
+
+.lift-row-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lift-row-icon,
+.lift-row-icon.palette-thumb-sprite,
+.lift-row-icon[data-sprite] {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.lift-row-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--parchment-light);
+}
+
+.lift-row-sub {
+  font-size: 9.5px;
+  color: var(--cream-muted);
+}
+
+.lift-status-pill {
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(21, 128, 61, 0.28);
+  border: 1px solid rgba(134, 239, 172, 0.45);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: #86efac;
+}
+
+/* Warm Parchment Milestone Cards */
+.challenge-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 9px;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #f3e5c7 0%, #e4cfa5 100%);
+  border: 1.5px solid #694224;
+  color: var(--parchment-ink);
+}
+
+.challenge-card.completed {
+  background: linear-gradient(180deg, #dcfce7 0%, #bbf7d0 100%);
+  border-color: #15803d;
+}
+
+.challenge-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #241307;
+}
+
+.challenge-desc {
+  font-size: 9.5px;
+  color: #57381f;
+  margin-top: 1px;
+}
+
+.challenge-reward {
+  flex-shrink: 0;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(34, 20, 10, 0.12);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #166534;
+}
+
+/* --------------------------------------------------------------------------
+   10. Zen Mode Restore Pill & Responsive Viewport Calibration
+   -------------------------------------------------------------------------- */
+.zen-restore-pill {
+  position: fixed;
+  bottom: 14px;
+  right: 14px;
+  z-index: 70;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 2px solid #24140a;
+  background: linear-gradient(180deg, #7e4f2b 0%, #492c17 100%);
+  color: var(--parchment-light);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.kbd-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--brass-bright);
+}
+
+/* Compact Desktop Calibration (1280x800 etc.) — Zero Overlap! */
+@media (max-width: 1380px) {
+  .tyrolean-status-ledger {
+    width: 368px;
+    height: 130px;
+  }
+  .tyrolean-minimap {
+    width: 234px;
+    height: 154px;
+  }
+  .inspector-card,
+  .tyrolean-inspector-card {
+    width: 312px;
+    height: 201px;
+  }
+  .build-dock,
+  .tyrolean-dock {
+    left: 250px;
+    width: calc(100vw - 574px);
+  }
+  .dock-tabs-rope {
+    width: 310px;
+    height: 62px;
+  }
+  .tab-medallion-ring {
+    width: 52px;
+    height: 52px;
+  }
+  .medallion-tool-btn {
+    width: 44px;
+    height: 45px;
+  }
+}
+
+/* Tablet / Narrow Window Fallback */
+@media (max-width: 1080px) {
+  .tyrolean-minimap {
+    display: none;
+  }
+  .build-dock,
+  .tyrolean-dock {
+    left: 12px;
+    width: calc(100vw - 24px);
+  }
+  .inspector-card,
+  .tyrolean-inspector-card {
+    bottom: var(--dock-safe-bottom);
+  }
+}
+
+/* Strict Desktop Isolation: Mobile-only controls never render > 768px */
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   11. MOBILE RESPONSIVE HUD (<= 768px)
+   85%+ Open Ski Mountain · 1-Row Horizontal Build Strip · [☰] Menu Drawer
+   Zero Desktop Impact · GPU-Composited Transforms Only (60 FPS)
+   ========================================================================== */
+@media (max-width: 768px) {
+  :root {
+    --dock-safe-bottom: 68px;
+  }
+
+  /* Hide colliding desktop chrome on phone viewports */
+  .hud-top-left-cluster,
+  .hud-top-right-stack,
+  .tyrolean-minimap,
+  .dock-utilities,
+  .tray-scroll-btn {
+    display: none !important;
+  }
+
+  /* 1. Slim 40px Top Bar: Vital Signs Pill (left) + [☰] Menu Button (right) */
+  .mobile-top-bar {
+    position: fixed;
+    top: max(8px, env(safe-area-inset-top));
+    left: 10px;
+    right: 10px;
+    z-index: 42;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    pointer-events: none;
+    contain: layout style;
+  }
+
+  .mobile-vital-pill {
+    position: relative;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 2px solid #221309;
+    background: linear-gradient(180deg, #623e24 0%, #3a2313 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(246, 211, 121, 0.44),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+      0 4px 12px rgba(6, 4, 2, 0.62);
+    color: var(--cream-text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    pointer-events: auto;
+    max-width: calc(100vw - 66px);
+    overflow: hidden;
+    transition: transform 90ms ease;
+  }
+
+  .mobile-vital-pill:active {
+    transform: scale(0.97);
+  }
+
+  .mobile-vital-pill.pulse-gain .cash-text {
+    color: #fef08a;
+    transform: scale(1.08);
+  }
+
+  .mob-pill-sep {
+    color: #b08d6a;
+    font-weight: 700;
+    font-size: 11px;
+  }
+
+  .mob-crowd-wrap,
+  .mob-rating-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .mob-crowd-icon {
+    color: #bae6fd;
+    flex-shrink: 0;
+  }
+
+  .mob-crowd-text {
+    color: #e0f2fe;
+    font-size: 11px;
+  }
+
+  .mob-runs-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    margin-left: 2px;
+    padding-left: 6px;
+    border-left: 1px solid rgba(244, 231, 203, 0.22);
+  }
+
+  .mob-run-num {
+    font-size: 9.5px;
+    color: #f8fafc;
+    margin-right: 2px;
+  }
+
+  .mob-notify-dot {
+    top: 4px;
+    right: 6px;
+  }
+
+  @media (max-width: 365px) {
+    .mob-runs-cluster {
+      display: none;
+    }
+  }
+
+  .mobile-menu-btn {
+    width: 40px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 2px solid #221309;
+    background: linear-gradient(180deg, #6b4326 0%, #3d2413 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(246, 211, 121, 0.45),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+      0 4px 12px rgba(6, 4, 2, 0.62);
+    color: var(--brass-bright);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 90ms ease;
+  }
+
+  .mobile-menu-btn:active {
+    transform: scale(0.95);
+  }
+
+  .mobile-menu-btn.active {
+    border-color: #fde047;
+    background: linear-gradient(180deg, #8c5830 0%, #4f311c 100%);
+  }
+
+  /* 2. Bottom Construction Dock: 5 Medallions + 1-Row Horizontal Drawer */
+  .build-dock,
+  .tyrolean-dock {
+    left: 6px;
+    right: 6px;
+    width: auto;
+    bottom: max(6px, env(safe-area-inset-bottom));
+  }
+
+  .dock-medallion-ridge {
+    justify-content: center;
+    padding: 0;
+    margin-bottom: -6px;
+  }
+
+  .dock-tabs-rope {
+    width: min(100%, 358px);
+    height: 60px;
+  }
+
+  .tab-medallion-ring {
+    width: 48px;
+    height: 48px;
+  }
+
+  .tab-label {
+    font-size: 8.5px;
+    padding: 1px 5px;
+    margin-bottom: -2px;
+  }
+
+  .tab-count {
+    top: 2px;
+    right: 2px;
+    min-width: 15px;
+    height: 13px;
+    font-size: 8px;
+  }
+
+  /* When collapsed on mobile, dim active tab ring so tapping any tab visibly opens it */
+  .build-dock.collapsed .dock-tab.active .tab-medallion-ring {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  .build-dock.collapsed .dock-tab.active .tab-label {
+    background: rgba(29, 17, 9, 0.92);
+    border-color: #7c5130;
+    color: var(--cream-muted);
+  }
+
+  .chalet-cabinet-shell {
+    padding: 10px 8px 16px;
+    border-width: 3px;
+  }
+
+  .chalet-ridge-cap {
+    top: -12px;
+    width: 48px;
+    height: 25px;
+  }
+
+  .chalet-bottom-apron {
+    bottom: -10px;
+    height: 26px;
+  }
+
+  /* Compact 1-line active item banner above open dock */
+  .palette-tooltip {
+    max-width: calc(100vw - 20px);
+    padding: 4px 10px;
+    margin-bottom: 4px;
+    border-width: 2px;
+  }
+
+  .tooltip-top {
+    margin-bottom: 0;
+    gap: 8px;
+  }
+
+  .tooltip-title {
+    font-size: 10.5px;
+  }
+
+  .tooltip-cost {
+    font-size: 10px;
+  }
+
+  .tooltip-desc {
+    display: none;
+  }
+
+  /* Sub-filter row with expandable search & 1-tap fold button */
+  .dock-subbar {
+    gap: 6px;
+    padding: 0 2px 5px;
+    margin-bottom: 5px;
+  }
+
+  .dock-subfilters {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dock-search-wrap {
+    display: none;
+  }
+
+  .dock-subbar.mob-search-open .dock-subfilters {
+    display: none;
+  }
+
+  .dock-subbar.mob-search-open .dock-search-wrap {
+    display: flex;
+    flex: 1;
+    width: auto;
+  }
+
+  /* 16px font prevents iOS Safari viewport auto-zoom on input focus */
+  .dock-subbar.mob-search-open .catalog-search-input {
+    height: 28px;
+    font-size: 16px;
+    padding: 0 26px 0 25px;
+  }
+
+  .mob-subbar-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .mob-subbar-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    border: 1px solid #6b4325;
+    background: rgba(28, 16, 8, 0.82);
+    color: var(--brass-bright);
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .mob-subbar-btn.active {
+    background: linear-gradient(180deg, #8f5a31 0%, #5e391d 100%);
+    border-color: #fde047;
+    color: #fffbeb;
+  }
+
+  /* Force smooth 1-Row Horizontal Scroll Strip on mobile */
+  .build-dock .dock-tray,
+  .build-dock.rows-1 .dock-tray,
+  .build-dock.rows-2 .dock-tray,
+  .build-dock.rows-3 .dock-tray {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    max-height: 78px;
+    gap: 6px;
+    padding: 2px 2px 3px;
+    scrollbar-width: none;
+  }
+
+  .build-dock .dock-tray::-webkit-scrollbar {
+    display: none;
+  }
+
+  .build-dock .palette-card,
+  .build-dock.rows-1 .palette-card,
+  .build-dock.rows-2 .palette-card,
+  .build-dock.rows-3 .palette-card {
+    flex: 0 0 72px;
+    height: 72px;
+  }
+
+  /* 3. Floating Right-Edge Touch Utility Rail */
+  .mobile-tool-rail {
+    position: fixed;
+    right: 10px;
+    bottom: calc(var(--dock-safe-bottom) + max(8px, env(safe-area-inset-bottom, 0px)));
+    z-index: 36;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    pointer-events: auto;
+    contain: layout style;
+  }
+
+  .mob-rail-medallion {
+    width: 44px;
+    height: 45px;
+  }
+
+  .mob-rail-medallion .tool-badge {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+
+  .mob-undo-stud {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid #221309;
+    background: radial-gradient(circle at 36% 32%, #8e5a32 0%, #4b2d17 78%);
+    box-shadow:
+      inset 0 1px 0 rgba(252, 224, 166, 0.42),
+      0 3px 8px rgba(0, 0, 0, 0.62);
+    color: var(--parchment-light);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .mob-undo-stud:disabled {
+    opacity: 0.38;
+    cursor: default;
+  }
+
+  /* 4. [☰] Mobile Menu Bottom Drawer & Backdrop */
+  .mobile-sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 58;
+    background: rgba(8, 12, 20, 0.54);
+    pointer-events: auto;
+  }
+
+  .mobile-menu-sheet {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    z-index: 62;
+    max-height: 82dvh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #4e311c 0%, #2b1a0e 100%);
+    border: 3px solid #84542f;
+    outline: 2px solid #1a0f07;
+    border-radius: 16px;
+    box-shadow:
+      inset 0 2px 0 rgba(242, 192, 132, 0.38),
+      0 16px 40px rgba(0, 0, 0, 0.78);
+    transform: translateY(calc(100% + 32px));
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+    contain: layout style;
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+  }
+
+  .mobile-menu-sheet.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-sheet-handle {
+    width: 38px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(246, 211, 121, 0.38);
+    margin: 7px auto 2px;
+    flex-shrink: 0;
+  }
+
+  .mobile-sheet-header {
+    position: relative;
+    padding: 6px 38px 9px 14px;
+    border-bottom: 1.5px solid rgba(25, 14, 7, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-sheet-title {
+    font-family: "Cinzel", serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brass-bright);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+  }
+
+  .mobile-sheet-close {
+    top: 5px;
+    right: 10px;
+  }
+
+  .mobile-sheet-body {
+    padding: 10px 12px 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .mob-menu-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .mob-group-label {
+    font-family: "Cinzel", serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--cream-muted);
+    text-transform: uppercase;
+  }
+
+  .mob-seg-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    padding: 3px;
+    border-radius: 10px;
+    background: rgba(20, 11, 5, 0.72);
+    border: 1px solid #6b4325;
+  }
+
+  .mob-seg-btn {
+    height: 34px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--cream-muted);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 4px;
+    white-space: nowrap;
+  }
+
+  .mob-seg-btn.active {
+    background: linear-gradient(180deg, #986035 0%, #5e381d 100%);
+    border-color: var(--brass-bright);
+    color: #fffbeb;
+    box-shadow: inset 0 1px 0 rgba(253, 224, 71, 0.42);
+  }
+
+  .mob-preset-row,
+  .mob-speed-mode-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mob-preset-select {
+    flex: 1;
+    min-width: 0;
+    height: 36px;
+    font-size: 12px;
+    padding: 0 24px 0 10px;
+    border-radius: 8px;
+  }
+
+  .mob-new-btn {
+    height: 36px;
+    padding: 0 12px;
+    font-size: 11px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .mob-speed-seg {
+    flex: 1.15;
+  }
+
+  .mob-mode-tile {
+    flex: 1;
+    height: 40px;
+  }
+
+  .mob-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .mob-action-tile {
+    height: 38px;
+    padding: 0 10px;
+    border-radius: 9px;
+    border: 1.5px solid #6b4325;
+    background: linear-gradient(180deg, #684024 0%, #432815 100%);
+    box-shadow: inset 0 1px 0 rgba(246, 211, 121, 0.28);
+    color: var(--parchment-light);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .mob-action-tile:active {
+    transform: translateY(1px);
+  }
+
+  .mob-action-tile.active,
+  .mob-mode-tile.free-build {
+    background: linear-gradient(180deg, #c9862b 0%, #834e15 100%);
+    border-color: #fde047;
+    color: #fffbeb;
+  }
+
+  /* 5. Mobile Bottom-Sheet Adaptation for Resort Guide, Inspector & Banners */
+  .guide-drawer {
+    top: auto;
+    left: 8px;
+    right: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    width: auto;
+    max-height: 78dvh;
+    z-index: 62;
+    border-width: 3px;
+    border-radius: 16px;
+    transform: translateY(calc(100% + 32px));
+  }
+
+  .guide-drawer.open {
+    transform: translateY(0);
+  }
+
+  .inspector-card,
+  .tyrolean-inspector-card {
+    right: auto;
+    left: 50%;
+    bottom: calc(var(--dock-safe-bottom) + max(8px, env(safe-area-inset-bottom)));
+    width: 338px;
+    height: 218px;
+    z-index: 38;
+    transform: translateX(-50%) scale(0.9);
+    transform-origin: bottom center;
+  }
+
+  .toast-container {
+    top: calc(max(8px, env(safe-area-inset-top)) + 44px);
+    width: calc(100vw - 16px);
+  }
+
+  .field-toast {
+    transform: scale(0.86);
+    transform-origin: top center;
+    margin-bottom: -16px;
+  }
+
+  .lift-drag-banner {
+    top: calc(max(8px, env(safe-area-inset-top)) + 46px);
+    max-width: calc(100vw - 20px);
+    width: max-content;
+    font-size: 10px;
+    padding: 6px 12px;
+  }
+
+  .zen-restore-pill .kbd-tag {
+    display: none;
+  }
+}
